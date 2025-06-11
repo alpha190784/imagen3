@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imagen 3 Prompt Generator by Alpha Studio</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --primary-color: #bb86fc;
+            --primary-variant-color: #3700b3;
+            --secondary-color: #03dac6;
+            --on-bg-color: #e0e0e0;
+            --on-surface-color: #ffffff;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--on-bg-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            color: var(--on-surface-color);
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        
+        header p {
+            text-align: center;
+            color: var(--secondary-color);
+            margin-bottom: 2.5rem;
+            font-weight: 500;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--on-bg-color);
+        }
+
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #2a2a2a;
+            color: var(--on-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(187, 134, 252, 0.2);
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .btn-generate {
+            grid-column: 1 / -1;
+            padding: 1rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 1rem;
+        }
+
+        .btn-generate:hover {
+            background-color: var(--primary-variant-color);
+            transform: translateY(-2px);
+        }
+
+        #result-container {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        #result-container h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--on-surface-color);
+        }
+
+        .output-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .output-column h3 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .output-column textarea {
+            width: 100%;
+            height: 200px;
+            padding: 0.8rem;
+            background-color: #2a2a2a;
+            color: var(--on-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        
+        .output-column textarea:read-only {
+            background-color: #222;
+            color: #aaa;
+        }
+
+        .btn-copy {
+            width: 100%;
+            padding: 0.8rem;
+            margin-top: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--bg-color);
+            background-color: var(--secondary-color);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-copy:hover {
+            background-color: #018786;
+        }
+        
+        .btn-copy.copied {
+            background-color: #28a745;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid, .output-columns {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>IMAGEN 3 GENERATOR</h1>
+            <p>BY ALPHA STUDIO</p>
+        </header>
+
+        <form id="prompt-form">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="subject">1. Subjek</label>
+                    <input type="text" id="subject" placeholder="Cth: Seekor rubah oranye yang cerdik">
+                </div>
+                <div class="form-group">
+                    <label for="action">2. Aksi</label>
+                    <input type="text" id="action" placeholder="Cth: membaca buku kuno">
+                </div>
+                <div class="form-group">
+                    <label for="expression">3. Ekspresi</label>
+                    <input type="text" id="expression" placeholder="Cth: dengan senyum misterius">
+                </div>
+                <div class="form-group">
+                    <label for="location">4. Tempat</label>
+                    <input type="text" id="location" placeholder="Cth: di perpustakaan megah yang remang">
+                </div>
+                <div class="form-group">
+                    <label for="time">5. Waktu</label>
+                    <select id="time">
+                        <option value="pagi hari">Pagi Hari</option>
+                        <option value="siang hari">Siang Hari</option>
+                        <option value="sore hari">Sore Hari</option>
+                        <option value="malam hari" selected>Malam Hari</option>
+                        <option value="saat fajar">Saat Fajar</option>
+                        <option value="saat senja">Saat Senja</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="lighting">6. Pencahayaan</label>
+                    <select id="lighting">
+                        <option value="cahaya hangat dari lilin">Cahaya Lilin Hangat</option>
+                        <option value="pencahayaan dramatis">Pencahayaan Dramatis</option>
+                        <option value="cahaya lembut alami">Cahaya Lembut Alami</option>
+                        <option value="sinar neon futuristik">Sinar Neon Futuristik</option>
+                        <option value="golden hour">Golden Hour</option>
+                        <option value="blue hour">Blue Hour</option>
+                        <option value="siluet">Siluet</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="style">7. Style Gambar</label>
+                    <select id="style">
+                        <option value="photorealistic">Fotorealistis</option>
+                        <option value="digital painting">Lukisan Digital</option>
+                        <option value="concept art">Seni Konsep</option>
+                        <option value="fantasy">Fantasi</option>
+                        <option value="anime style">Gaya Anime</option>
+                        <option value="3D render">3D Render</option>
+                        <option value="watercolor">Cat Air</option>
+                        <option value="cinematic">Sinematik</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="mood">8. Suasana Gambar</label>
+                    <select id="mood">
+                        <option value="misterius dan tenang">Misterius & Tenang</option>
+                        <option value="epik dan megah">Epik & Megah</option>
+                        <option value="ceria dan hangat">Ceria & Hangat</option>
+                        <option value="melankolis">Melankolis</option>
+                        <option value="futuristik dan dingin">Futuristik & Dingin</option>
+                        <option value="damai">Damai</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ratio">9. Ratio Gambar</label>
+                    <select id="ratio">
+                        <option value="1:1">1:1 (Persegi)</option>
+                        <option value="16:9" selected>16:9 (Lanskap)</option>
+                        <option value="9:16">9:16 (Potret)</option>
+                        <option value="4:3">4:3 (Klasik)</option>
+                        <option value="3:2">3:2 (Fotografi)</option>
+                        <option value="21:9">21:9 (Sinematik)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="angle">10. Angle Gambar</label>
+                    <input type="text" id="angle" placeholder="Cth: low angle shot, dari bawah">
+                </div>
+                <div class="form-group full-width">
+                    <label for="negative-prompt">11. Negative Prompt</label>
+                    <input type="text" id="negative-prompt" placeholder="Cth: blur, low quality, watermark, teks">
+                </div>
+            </div>
+            <button type="submit" class="btn-generate">Buat Prompt</button>
+        </form>
+
+        <div id="result-container" style="display: none;">
+            <h2>Hasil Prompt</h2>
+            <div class="output-columns">
+                <div class="output-column">
+                    <h3>Bahasa Indonesia (Dapat Diedit)</h3>
+                    <textarea id="indonesian-prompt"></textarea>
+                </div>
+                <div class="output-column">
+                    <h3>Bahasa Inggris (Final)</h3>
+                    <textarea id="english-prompt" readonly></textarea>
+                    <button class="btn-copy" id="copy-button">Salin Prompt</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('prompt-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // 1. Kumpulkan semua nilai dari input
+            const subject = document.getElementById('subject').value;
+            const action = document.getElementById('action').value;
+            const expression = document.getElementById('expression').value;
+            const location = document.getElementById('location').value;
+            const time = document.getElementById('time').value;
+            const lighting = document.getElementById('lighting').value;
+            const style = document.getElementById('style').value;
+            const mood = document.getElementById('mood').value;
+            const ratio = document.getElementById('ratio').value;
+            const angle = document.getElementById('angle').value;
+            const negativePrompt = document.getElementById('negative-prompt').value;
+            
+            // 2. Buat prompt Bahasa Indonesia yang lebih deskriptif
+            let indonesianPrompt = `Sebuah mahakarya ${style} yang menggambarkan ${subject}`;
+            
+            if (action) indonesianPrompt += ` sedang ${action}`;
+            if (expression) indonesianPrompt += ` ${expression}`;
+            if (location) indonesianPrompt += ` ${location}`;
+            if (time) indonesianPrompt += `, suasana pada ${time}`;
+            
+            indonesianPrompt += `. Pencahayaan dalam gambar adalah ${lighting}, menciptakan suasana yang ${mood}.`;
+            
+            if (angle) indonesianPrompt += ` Pengambilan gambar dari sudut ${angle}.`;
+            
+            indonesianPrompt += ` Dibuat dengan detail yang sangat tinggi, fokus tajam, dan komposisi yang seimbang.`;
+
+            // Tambahkan parameter teknis di akhir
+            let techParams = `--ar ${ratio}`;
+            if (negativePrompt) {
+                techParams += ` --no ${negativePrompt}`;
+            }
+            
+            // 3. Terjemahkan komponen ke Bahasa Inggris (terjemahan sederhana)
+            const translations = {
+                // Time
+                'pagi hari': 'in the morning', 'siang hari': 'at noon', 'sore hari': 'in the afternoon', 'malam hari': 'at night', 'saat fajar': 'at dawn', 'saat senja': 'at dusk',
+                // Lighting
+                'cahaya hangat dari lilin': 'warm candlelight', 'pencahayaan dramatis': 'dramatic lighting', 'cahaya lembut alami': 'soft natural light', 'sinar neon futuristik': 'futuristic neon glow', 'golden hour': 'golden hour lighting', 'blue hour': 'blue hour lighting', 'siluet': 'silhouette lighting',
+                // Mood
+                'misterius dan tenang': 'mysterious and calm', 'epik dan megah': 'epic and grand', 'ceria dan hangat': 'cheerful and warm', 'melankolis': 'melancholic', 'futuristik dan dingin': 'futuristic and cold', 'damai': 'peaceful',
+            };
+
+            // 4. Buat prompt Bahasa Inggris
+            let englishPrompt = `A masterpiece in ${style} style, depicting ${subject}`;
+            
+            if (action) englishPrompt += ` ${action}`;
+            if (expression) englishPrompt += ` ${expression}`;
+            if (location) englishPrompt += ` ${location}`;
+            if (time) englishPrompt += `, set ${translations[time] || time}`;
+
+            englishPrompt += `. The scene is illuminated by ${translations[lighting] || lighting}, creating a ${translations[mood] || mood} atmosphere.`;
+
+            if (angle) englishPrompt += ` Shot from a ${angle}.`;
+            
+            englishPrompt += ` Ultra-detailed, sharp focus, balanced composition.`;
+
+
+            // 5. Tampilkan hasil
+            document.getElementById('indonesian-prompt').value = `${indonesianPrompt} ${techParams}`;
+            document.getElementById('english-prompt').value = `${englishPrompt} ${techParams}`;
+            document.getElementById('result-container').style.display = 'block';
+            
+            // Scroll ke hasil
+            document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // 6. Fungsionalitas Tombol Salin
+        const copyButton = document.getElementById('copy-button');
+        copyButton.addEventListener('click', function() {
+            const englishPromptTextarea = document.getElementById('english-prompt');
+            
+            navigator.clipboard.writeText(englishPromptTextarea.value).then(() => {
+                // Sukses menyalin
+                copyButton.textContent = 'Berhasil Disalin!';
+                copyButton.classList.add('copied');
+                
+                setTimeout(() => {
+                    copyButton.textContent = 'Salin Prompt';
+                    copyButton.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Gagal menyalin: ', err);
+                copyButton.textContent = 'Gagal Menyalin';
+                 setTimeout(() => {
+                    copyButton.textContent = 'Salin Prompt';
+                }, 2000);
+            });
+        });
+    </script>
+
+</body>
+</html> 

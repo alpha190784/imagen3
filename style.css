@@ -1,0 +1,87 @@
+body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.calculator-container {
+    background-color: #1e1e1e;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 2rem;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.grid-header {
+    background-color: #333;
+    padding: 1rem;
+    border-radius: 5px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-item {
+    background-color: #2a2a2a;
+    padding: 1rem;
+    border-radius: 5px;
+}
+
+.grid-item button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.grid-item button:hover {
+    background-color: #0056b3;
+}
+
+.grid-item button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+}
+
+.grid-item .delete-btn {
+    background-color: #dc3545;
+}
+
+.grid-item .delete-btn:hover {
+    background-color: #c82333;
+}
+
+input {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: #333;
+    border: 1px solid #444;
+    color: #ffffff;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.row-actions {
+    display: flex;
+    justify-content: space-around;
+} 
